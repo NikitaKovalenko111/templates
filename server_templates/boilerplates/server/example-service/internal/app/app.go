@@ -21,11 +21,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+type App struct {
+	http   *http.HTTP
+	app    *fiber.App
+	config *config.Config
+}
+
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
 // @description Type "Bearer" followed by a space and JWT token.
-func Run(cfg *config.Config) {
+func New(cfg *config.Config) *App {
 	logger := sl.InitLogger(cfg.Env)
 
 	logger.Info("Logger is enabled")
@@ -86,7 +92,19 @@ func Run(cfg *config.Config) {
 
 	http := http.Init(services, app /*authMiddleware*/)
 
-	http.Start()
+	return &App{
+		http:   http,
+		config: cfg,
+		app:    app,
+	}
+}
 
-	app.Listen(cfg.HTTPServer.Address)
+func (app *App) Run() {
+	app.http.Start()
+
+	go app.app.Listen(app.config.HTTPServer.Address)
+}
+
+func (app *App) Stop() {
+	app.app.Shutdown()
 }

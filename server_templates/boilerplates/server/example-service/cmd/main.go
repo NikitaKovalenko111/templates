@@ -3,6 +3,9 @@ package main
 import (
 	"example-service/internal/app"
 	"example-service/internal/config"
+	"os"
+	"os/signal"
+	"syscall"
 
 	_ "example-service/docs"
 )
@@ -16,5 +19,14 @@ import (
 func main() {
 	cfg := config.MustLoad()
 
-	app.Run(cfg)
+	app := app.New(cfg)
+
+	go app.Run()
+
+	exit := make(chan os.Signal, 1)
+	signal.Notify(exit, os.Interrupt, syscall.SIGTERM)
+
+	<-exit
+
+	app.Stop()
 }
