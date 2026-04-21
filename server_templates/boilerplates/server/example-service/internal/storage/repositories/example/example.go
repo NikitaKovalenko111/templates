@@ -1,9 +1,14 @@
 package example_storage
 
-type ExampleStorage struct {
+import "database/sql"
+
+type ExampleRepo struct {
+	db *sql.DB
 	// ...
 }
 
-func Init() *ExampleStorage {
-	return &ExampleStorage{}
+func Init(db *sql.DB) *ExampleRepo {
+	return &ExampleRepo{
+		db: db,
+	}
 }

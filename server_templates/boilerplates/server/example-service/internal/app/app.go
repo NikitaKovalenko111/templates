@@ -57,7 +57,7 @@ func New(cfg *config.Config) *App {
 
 	logger.Info("Successfully connected to redis!")
 
-	repos := repositories.Init()
+	repos := repositories.Init(db)
 
 	logger.Info("Successfully inited repositories!")
 

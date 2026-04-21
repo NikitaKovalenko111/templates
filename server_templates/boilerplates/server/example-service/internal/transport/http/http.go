@@ -3,6 +3,7 @@ package http
 import (
 	"example-service/internal/services"
 	"example-service/internal/transport/http/controllers"
+	"log/slog"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -13,10 +14,10 @@ type HTTP struct {
 	//authMiddleware          func(c *fiber.Ctx) error
 }
 
-func Init(services *services.Services, app *fiber.App /*authMiddleware func(c *fiber.Ctx) error*/) *HTTP {
+func Init(services *services.Services, logger *slog.Logger, app *fiber.App /*authMiddleware func(c *fiber.Ctx) error*/) *HTTP {
 	return &HTTP{
 		app:         app,
-		controllers: controllers.Init(),
+		controllers: controllers.Init(services, logger),
 	}
 }
 
