@@ -22,5 +22,5 @@ func Init(services *services.Services, logger *slog.Logger, app *fiber.App /*aut
 }
 
 func (http *HTTP) Start() {
-
+	http.controllers.ExampleController.RegisterRoutes("example", http.app)
 }
